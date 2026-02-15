@@ -94,11 +94,17 @@ function startGame() {
   canvas.style.display = "block";
   score = 0;
   gameInterval = setInterval(updateGame, 20);
-}
-
+  // Keyboard control
 document.addEventListener("keydown", function() {
   velocity = -9;
 });
+
+// Touch control for mobile & tablet
+canvas.addEventListener("touchstart", function(e) {
+  e.preventDefault();
+  velocity = -9;
+});
+
 
 function updateGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
