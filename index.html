@@ -122,7 +122,93 @@ function updateGame() {
     birdY = 200;
   }
 }
+<script>
+let canvas = document.getElementById("gameCanvas");
+let ctx = canvas.getContext("2d");
+
+let birdY = 200;
+let gravity = 0.6;
+let velocity = 0;
+let score = 0;
+let gameInterval;
+let pipes = [];
+
+function startGame() {
+  canvas.style.display = "block";
+  birdY = 200;
+  velocity = 0;
+  score = 0;
+  pipes = [];
+  clearInterval(gameInterval);
+  gameInterval = setInterval(updateGame, 20);
+}
+
+document.addEventListener("keydown", function() {
+  velocity = -9;
+});
+
+function createPipe() {
+  let gap = 120;
+  let topHeight = Math.random() * 250;
+  pipes.push({
+    x: canvas.width,
+    top: topHeight,
+    bottom: topHeight + gap
+  });
+}
+
+function updateGame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  velocity += gravity;
+  birdY += velocity;
+
+  // Draw bird
+  ctx.fillStyle = "yellow";
+  ctx.beginPath();
+  ctx.arc(100, birdY, 20, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Create pipes
+  if (score % 90 === 0) {
+    createPipe();
+  }
+
+  // Draw pipes
+  ctx.fillStyle = "green";
+  for (let i = 0; i < pipes.length; i++) {
+    pipes[i].x -= 3;
+
+    ctx.fillRect(pipes[i].x, 0, 50, pipes[i].top);
+    ctx.fillRect(pipes[i].x, pipes[i].bottom, 50, canvas.height);
+
+    // Collision detection
+    if (
+      100 + 20 > pipes[i].x &&
+      100 - 20 < pipes[i].x + 50 &&
+      (birdY - 20 < pipes[i].top || birdY + 20 > pipes[i].bottom)
+    ) {
+      gameOver();
+    }
+  }
+
+  // Score
+  score++;
+  ctx.fillStyle = "black";
+  ctx.font = "20px Arial";
+  ctx.fillText("Score: " + score, 10, 30);
+
+  if (birdY > canvas.height || birdY < 0) {
+    gameOver();
+  }
+}
+
+function gameOver() {
+  clearInterval(gameInterval);
+  alert("Game Over! Score: " + score);
+}
 </script>
+
 
 </body>
 </html>
