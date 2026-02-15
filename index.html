@@ -2,24 +2,127 @@
 <html>
 <head>
   <title>Infinity Gamer Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: black;
+      background: linear-gradient(135deg, #000000, #1a1a2e);
       color: white;
       text-align: center;
     }
+
     h1 {
       padding: 20px;
       color: cyan;
+      font-size: 40px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #16213e;
+      padding: 20px;
+      border-radius: 15px;
+      width: 250px;
+      box-shadow: 0 0 15px cyan;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: cyan;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    canvas {
+      background: skyblue;
+      display: none;
+      margin-top: 20px;
+      border: 3px solid white;
     }
   </style>
 </head>
+
 <body>
 
-<h1>🎮 Welcome to Infinity Gamer Hub 🚀</h1>
-<p>Your gaming world is coming soon...</p>
+<h1>🎮 Infinity Gamer Hub 🚀</h1>
+
+<div class="container">
+  <div class="card">
+    <h2>Flappy Style Game</h2>
+    <button onclick="startGame()">Play</button>
+  </div>
+
+  <div class="card">
+    <h2>Runner Game</h2>
+    <button disabled>Coming Soon</button>
+  </div>
+
+  <div class="card">
+    <h2>Subway Style Game</h2>
+    <button disabled>Coming Soon</button>
+  </div>
+</div>
+
+<canvas id="gameCanvas" width="400" height="500"></canvas>
+
+<script>
+let canvas = document.getElementById("gameCanvas");
+let ctx = canvas.getContext("2d");
+
+let birdY = 200;
+let gravity = 0.6;
+let velocity = 0;
+let score = 0;
+let gameInterval;
+
+function startGame() {
+  canvas.style.display = "block";
+  score = 0;
+  gameInterval = setInterval(updateGame, 20);
+}
+
+document.addEventListener("keydown", function() {
+  velocity = -9;
+});
+
+function updateGame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  velocity += gravity;
+  birdY += velocity;
+
+  ctx.fillStyle = "yellow";
+  ctx.beginPath();
+  ctx.arc(100, birdY, 20, 0, Math.PI * 2);
+  ctx.fill();
+
+  score++;
+  ctx.fillStyle = "black";
+  ctx.font = "20px Arial";
+  ctx.fillText("Score: " + score, 10, 30);
+
+  if (birdY > canvas.height) {
+    clearInterval(gameInterval);
+    alert("Game Over! Score: " + score);
+    birdY = 200;
+  }
+}
+</script>
 
 </body>
 </html>
